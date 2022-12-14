@@ -137,7 +137,7 @@ exit_status "Could not create a service for server" "Service created successfull
 
 display "Creating the service for client"
 
-docker stack deploy -c ./client/docker-compose.yml client
+docker stack deploy -c ./client/docker-compose.yml frontend
 
 exit_status "Could not create the service for client" "Service created successfully for client"
 

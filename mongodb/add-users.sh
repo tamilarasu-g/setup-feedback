@@ -19,7 +19,7 @@ db.auth("ADMIN_USER","ADMIN_PASSWD")
 db.createUser(
         {
             user: "DB_USER",
-            pwd: "DB_USER_PASSWD",
+            pwd: "DB_PASSWD",
             roles: [
                 {
                     role: "readWrite",
