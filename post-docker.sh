@@ -127,6 +127,8 @@ exit_status "Could not enable authentication and authorization" "Enabled authent
 
 display "Creating service for Server"
 
+touch ./server/log.txt
+
 docker stack deploy -c ./server/docker-compose.yml backend
 
 exit_status "Could not create a service for server" "Service created successfully for server."
