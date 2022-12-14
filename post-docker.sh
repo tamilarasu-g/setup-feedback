@@ -77,9 +77,9 @@ export $(grep -v '^#' ./mongodb/env | xargs -d '\n')
 
 sed -i -e "s|ADMIN_USER|$ADMIN_USER|g" ./mongodb/add-users.sh
 sed -i -e "s|ADMIN_PASSWD|$ADMIN_PASSWD|g" ./mongodb/add-users.sh
-sed -i -e"s|USER|$USER|g" ./mongodb/add-users.sh
-sed -i -e "s|PASSWD|$PASSWD|g" ./mongodb/add-users.sh
-sed -i -e "s|DATABASE|$DATABASE|g" ./mongodb/add-users.sh
+sed -i -e"s|DB_USER|$DB_USER|g" ./mongodb/add-users.sh
+sed -i -e "s|DB_PASSWD|$DB_PASSWD|g" ./mongodb/add-users.sh
+sed -i -e "s|DB|$DB|g" ./mongodb/add-users.sh
 
 
 #-----------------------------------------------------------------------------------
