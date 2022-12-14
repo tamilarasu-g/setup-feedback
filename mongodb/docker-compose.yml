@@ -1,0 +1,67 @@
+version: "3.9"
+services:
+  mongo1:
+    image : mongo:6.0.2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - mongo-volume1:/data/db
+      - ./rs-init.sh:/scripts/rs-init.sh
+      - ./add-users.sh:/scripts/add-users.sh
+      - ./file.key:/data/file.key
+    ports:
+      - 27017:27017
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "myrepl", "--keyFile","/data/file.key" ]
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 300M
+  mongo2:
+    image : mongo:6.0.2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - mongo-volume2:/data/db
+      - ./file.key:/data/file.key
+#    ports:
+#      - 27018:27017
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "myrepl", "--keyFile", "/data/file.key" ]
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 150M
+  mongo3:
+    image : mongo:6.0.2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - mongo-volume3:/data/db
+      - ./file.key:/data/file.key
+#    ports:
+#      - 27019:27017
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "myrepl", "--keyFile", "/data/file.key" ]
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 150M
+networks:
+  default:
+    name: swarm-server
+    driver: overlay
+    attachable: true
+volumes:
+  mongo-volume1:
+    name: mongo-volume1
+  mongo-volume2:
+    name: mongo-volume2
+  mongo-volume3:
+    name: mongo-volume3
