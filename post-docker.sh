@@ -73,7 +73,7 @@ exit_status "Could not pull the mongodb image !!" "MongoDB image pulled succesfu
 
 # Replace the credentials for mongodb
 
-export $(grep -v '^#' ./mongodb/env | xargs -d '\n')
+export $(grep -v '^#' ./mongodb/.env | xargs -d '\n')
 
 sed -i -e "s|ADMIN_USER|$ADMIN_USER|g" ./mongodb/add-users.sh
 sed -i -e "s|ADMIN_PASSWD|$ADMIN_PASSWD|g" ./mongodb/add-users.sh
