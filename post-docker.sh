@@ -20,12 +20,13 @@ exit_status()
 
 # Variables
 IP="$(hostname -I | awk '{print $1}')"
+exit_status "No IP assigned !!" "IP found"
 
 # Display function
 
 display()
 {
-	echo "---------------------------------------------------------------------"
+	echo "------------------------------------------------------------------------------------------"
 	echo "$1"
 
 }
@@ -143,3 +144,4 @@ docker stack deploy -c ./client/docker-compose.yml frontend
 
 exit_status "Could not create the service for client" "Service created successfully for client"
 
+exit 0
