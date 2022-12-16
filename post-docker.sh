@@ -1,9 +1,11 @@
+#!/usr/bin/bash
+
 # Check if the script is executed by the root user
 
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root" >> log.txt
-  exit 1
-fi
+#if [ "$EUID" -ne 0 ]
+#  then echo "Please run as root" >> log.txt
+#  exit 1
+#fi
 
 
 #Exit Status Function
@@ -36,9 +38,14 @@ display()
 
 display "Initiating Docker Swarm Mode"
 
-docker swarm init --advertise-addr ${IP}
-
-exit_status "Could not initiate Docker swarm mode !!" "Docker swarm mode initiated."
+if [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == "inactive" ]
+then 
+	docker swarm init --advertise-addr ${IP}
+	exit_status "Could not initiate Docker swarm" "Docker Swarm Mode Inititated."
+elif [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == "active" ]
+	echo "Docker Swarm Mode already active."
+else
+	echo "Docker swarm mode is not ready. Please check the state of Docker swarm."
 
 #-----------------------------------------------------------------------------------
 
