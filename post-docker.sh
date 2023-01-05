@@ -23,6 +23,7 @@ exit_status()
 # Variables
 IP="$(hostname -I | awk '{print $1}')"
 exit_status "No IP assigned !!" "IP found"
+CURRENT_WORKING_DIRECTORY=$(pwd)
 
 # Display function
 
@@ -137,6 +138,10 @@ display "Creating service for Server"
 
 touch ./server/log.txt
 
+mkfifo ./server/mypipe
+
+exit_status "Could not create the pipe" "Pipe created successfully"
+
 docker stack deploy -c ./server/docker-compose.yml backend
 
 exit_status "Could not create a service for server" "Service created successfully for server."
@@ -150,5 +155,32 @@ display "Creating the service for client"
 docker stack deploy -c ./client/docker-compose.yml frontend
 
 exit_status "Could not create the service for client" "Service created successfully for client"
+
+
+#-----------------------------------------------------------------------------------
+
+# Copy the updateScript file to /usr/bin/
+
+chmod +x updateScript
+
+sudo cp updateScript /usr/bin/
+
+# Copy the execpipe file to /usr/bin/
+
+sed -i -e "s|DIR|$CURRENT_WORKING_DIRECTORY|g" ./execpipe
+
+chmod +x execpipe
+
+sudo cp execpipe /usr/bin/
+
+# Start the pipe process for listening
+
+/usr/bin/execpipe > /dev/null 2>&1 & 
+
+# Setup the cronjob for the pipe process to persist after reboot
+
+(crontab -l; echo "@reboot /usr/bin/execpipe") | sort -u | crontab -
+
+exit_status "Could not add the cronjob entry" "Cron job added succesfully"
 
 exit 0
