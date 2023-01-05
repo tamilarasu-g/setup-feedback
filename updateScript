@@ -1,0 +1,24 @@
+#/usr/bin/bash
+
+#Define function
+update_server()
+{
+docker service update --image tamilarasug/feedback-server:latest backend_server
+}
+
+update_client ()
+{
+docker service update --image tamilarasug/feedback-client:latest frontend_client
+}
+
+for var in "$@"
+do
+  case "$var" in
+    client) update_client
+    ;;
+    server) update_server
+    ;;
+    *) echo "Unknown Argument"
+    ;;
+  esac
+done
