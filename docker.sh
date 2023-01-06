@@ -19,6 +19,10 @@ exit_status()
     fi
 }
 
+# Variables
+
+CURRENT_USER=$(logname)
+
 # Create the log file
 
 touch log.txt
@@ -49,5 +53,16 @@ echo "--------------------------------------------------------------------------
 
 sh get-docker.sh
 
-exit_status "Could not Install Docker !!" "Docker Installed Successfully....Please Logout"
+exit_status "Could not Install Docker !!" "Docker Installed Successfully"
 
+# Add the current user to the docker group
+
+echo "-----------------------------------------------------------------------------"
+
+echo "Adding the current user to the Docker Group"
+
+echo "-----------------------------------------------------------------------------"
+
+usermod -aG docker $CURRENT_USER
+
+exit_status "Could not add the $CURRENT_USER user to the Docker group" "Added the $CURRENT_USER to the Docker Group...Please Logout"
