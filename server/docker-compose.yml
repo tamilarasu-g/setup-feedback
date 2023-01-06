@@ -11,6 +11,7 @@ services:
       .env
     volumes:
       - ./log.txt:/app/log.txt
+      - ./mypipe:/app/mypipe
     deploy:
       resources:
         limits:
