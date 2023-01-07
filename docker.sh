@@ -24,6 +24,8 @@ exit_status()
 
 CURRENT_USER=$(logname)
 
+echo "The Current Username is : $CURRENT_USER...."
+
 # Download Docker Script
 
 echo "-----------------------------------------------------------------------------"
