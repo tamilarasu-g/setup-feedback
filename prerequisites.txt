@@ -1,2 +1,4 @@
-SUDO_PASSWORD should be defined
-
+Define SUDO_PASSWORD seperately
+Create unique log files for both the scripts
+Define all the variables in server,client and mongodb
+Modify the limits of cpu and ram for the docker containers if necessary
