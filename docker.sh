@@ -24,13 +24,6 @@ exit_status()
 
 CURRENT_USER=$(logname)
 
-# Create the log file
-
-touch log.txt
-
-exit_status "Could not create the log file !!"
-
-
 # Download Docker Script
 
 echo "-----------------------------------------------------------------------------"
