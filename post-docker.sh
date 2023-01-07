@@ -192,6 +192,8 @@ openssl rand -base64 700 > ./mongodb/file.key
 
 chmod 400 ./mongodb/file.key
 
+exit_status "Could not create/modify the permissions for key file" "Key file for mongodb created and modified successfully"
+
 #-----------------------------------------------------------------------------------
 
 #Start containers for mongodb
@@ -200,7 +202,7 @@ display "Starting containers for mongodb"
 
 docker compose -f ./mongodb/docker-compose.yml up -d
 
-exit_status "Could not start the containers for MongoDB"
+exit_status "Could not start the containers for MongoDB" "MongoDB containers started successfully"
 
 #-----------------------------------------------------------------------------------
 
@@ -231,6 +233,8 @@ display "Creating service for Server"
 
 touch ./server/log.txt
 
+exit_status "Could not create the log file for server" "Log file for server created successfully"
+
 mkfifo ./server/mypipe
 
 exit_status "Could not create the pipe" "Pipe created successfully"
@@ -257,7 +261,8 @@ exit_status "Could not create the service for client" "Service created successfu
 display "Setting up NGINX"
 
 sudo apt-get update
-sudo apt-get instal certbot python3-certbot-nginx -y
+sudo apt-get install certbot python3-certbot-nginx -y
+
 
 
 
