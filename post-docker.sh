@@ -39,14 +39,17 @@ display()
 
 display "Initiating Docker Swarm Mode"
 
-if [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == "inactive" ]
+if [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == " inactive" ]
 then 
 	docker swarm init --advertise-addr ${IP}
 	exit_status "Could not initiate Docker swarm" "Docker Swarm Mode Inititated."
-elif [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == "active" ]
+elif [ "$(docker info | grep Swarm | sed 's/Swarm: //g')" == " active" ]
+then
 	echo "Docker Swarm Mode already active."
 else
 	echo "Docker swarm mode is not ready. Please check the state of Docker swarm."
+	exit 1
+fi
 
 #-----------------------------------------------------------------------------------
 
@@ -121,15 +124,16 @@ fi
 
 while read arguments
 do
-    if [[ $arguments =~ ^[[:upper:]]+$ ]]
+    if [[ $arguments =~ ^[[:upper:]]+$ || $arguments =~ "_" ]]
     then
         unset "$arguments"
     else
-        if [[ ! command -v $arguments &> /dev/null ]]
+        if ! command -v "$arguments" &> /dev/null
         then
             echo "$arguments command does not exist"
             exit 1
         fi
+    fi
 done < ./requirements.txt
 
 # Check for the presence of all ENV files
@@ -146,7 +150,7 @@ do
         if [[ $file == *.env ]]
         then
             export $(grep -v '^#' $file | xargs -d '\n')
-            exit_status "Could not export the env variables of $file."
+            exit_status "Could not export the env variables of $file." "Exported the variables in $file successfully"
         fi
     fi
 done
@@ -163,7 +167,8 @@ do
             echo "$env_variable is not defined"
             exit 1
         fi
-done
+    fi
+done < requirements.txt
 
 #-----------------------------------------------------------------------------------
 
