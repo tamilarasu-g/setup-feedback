@@ -76,19 +76,107 @@ display "Pulling mongodb image"
 
 docker compose -f ./mongodb/docker-compose.yml pull
 
-exit_status "Could not pull the mongodb image !!" "MongoDB image pulled succesfully."
+exit_status "Could not pull the mongodb image !!" "MongoDB image pulled successfully."
 
 #-----------------------------------------------------------------------------------
 
+# Copy the updateScript file to /usr/bin/
+
+chmod +x updateScript
+
+echo "$SUDO_PASSWORD" | sudo -S cp updateScript /usr/bin/
+
+exit_status "Could not copy updateScript to /usr/bin/" "Copied updateScript successfully"
+
+# Copy the execpipe file to /usr/bin/
+
+sed -i -e "s|DIR|$CURRENT_WORKING_DIRECTORY|g" ./execpipe
+
+exit_status "Could not replace the $CURRENT_WORKING_DIRECTORY in execpipe"
+
+chmod +x execpipe
+
+echo "SUDO_PASSWORD" | sudo -S cp execpipe /usr/bin/
+
+exit_status "Could not copy the execpipe to /usr/bin/" "Copied execpipe successfully"
+
+# Start the pipe process for listening
+
+/usr/bin/execpipe > /dev/null 2>&1 & 
+
+# Setup the cronjob for the pipe process to persist after reboot
+
+(crontab -l; echo "@reboot /usr/bin/execpipe") | sort -u | crontab -
+
+exit_status "Could not add the cronjob entry" "Cron job added successfully"
+
+# Check for presence of requirements.txt file
+
+if [[ ! -f ./requirements.txt ]]
+then
+    exit_status "The requirements.txt file does not exist"
+fi
+
+# Unset any previously defined ENV Variables
+
+while read arguments
+do
+    if [[ $arguments =~ ^[[:upper:]]+$ ]]
+    then
+        unset "$arguments"
+    else
+        if [[ ! command -v $arguments &> /dev/null ]]
+        then
+            echo "$arguments command does not exist"
+            exit 1
+        fi
+done < ./requirements.txt
+
+# Check for the presence of all ENV files
+
+files=("./server/.env" "./client/.env" "./mongodb/.env")
+
+for file in ${files[@]}
+do
+    if [[ ! -f $file ]]
+    then
+        echo "The $file does not exist" 
+    else
+        echo "$file exists"
+        if [[ $file == *.env ]]
+        then
+            export $(grep -v '^#' $file | xargs -d '\n')
+            exit_status "Could not export the env variables of $file."
+        fi
+    fi
+done
+
+
+# Check if all the required variables are set
+
+while read env_variable
+do
+    if [[ $env_variable =~ ^[[:upper:]]+$ ]]
+    then
+        if [[ -z "$env_variable" ]]
+        then
+            echo "$env_variable is not defined"
+            exit 1
+        fi
+done
+
+#-----------------------------------------------------------------------------------
+
+
 # Replace the credentials for mongodb
 
-export $(grep -v '^#' ./mongodb/.env | xargs -d '\n')
+ADD_USERS_FILE="./mongodb/add-users.sh"
 
-sed -i -e "s|ADMIN_USER|$ADMIN_USER|g" ./mongodb/add-users.sh
-sed -i -e "s|ADMIN_PASSWD|$ADMIN_PASSWD|g" ./mongodb/add-users.sh
-sed -i -e"s|DB_USER|$DB_USER|g" ./mongodb/add-users.sh
-sed -i -e "s|DB_PASSWD|$DB_PASSWD|g" ./mongodb/add-users.sh
-sed -i -e "s|DB|$DB|g" ./mongodb/add-users.sh
+sed -i -e "s|ADMIN_USER|$ADMIN_USER|g" $ADD_USERS_FILE 
+sed -i -e "s|ADMIN_PASSWD|$ADMIN_PASSWD|g" $ADD_USERS_FILE
+sed -i -e"s|DB_USER|$DB_USER|g" $ADD_USERS_FILE
+sed -i -e "s|DB_PASSWD|$DB_PASSWD|g" $ADD_USERS_FILE
+sed -i -e "s|DB|$DB|g" $ADD_USERS_FILE
 
 
 #-----------------------------------------------------------------------------------
@@ -159,28 +247,13 @@ exit_status "Could not create the service for client" "Service created successfu
 
 #-----------------------------------------------------------------------------------
 
-# Copy the updateScript file to /usr/bin/
+# Setup NGINX
 
-chmod +x updateScript
+display "Setting up NGINX"
 
-sudo cp updateScript /usr/bin/
+sudo apt-get update
+sudo apt-get instal certbot python3-certbot-nginx -y
 
-# Copy the execpipe file to /usr/bin/
 
-sed -i -e "s|DIR|$CURRENT_WORKING_DIRECTORY|g" ./execpipe
-
-chmod +x execpipe
-
-sudo cp execpipe /usr/bin/
-
-# Start the pipe process for listening
-
-/usr/bin/execpipe > /dev/null 2>&1 & 
-
-# Setup the cronjob for the pipe process to persist after reboot
-
-(crontab -l; echo "@reboot /usr/bin/execpipe") | sort -u | crontab -
-
-exit_status "Could not add the cronjob entry" "Cron job added succesfully"
 
 exit 0
