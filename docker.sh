@@ -5,6 +5,7 @@
 if [ $EUID -ne 0 ]
 then
 	echo "Please execute the script using root !!"
+	exit 1
 fi
 
 #Exit Status Function
