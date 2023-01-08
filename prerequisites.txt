@@ -1,4 +1,5 @@
-Define SUDO_PASSWORD seperately
+Define rules in /etc/sudoers to use sudo without password
 Create unique log files for both the scripts
 Define all the variables in server,client and mongodb
 Modify the limits of cpu and ram for the docker containers if necessary
+Make sure the cronjob is added for execpipe
