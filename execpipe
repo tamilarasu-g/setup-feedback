@@ -1,3 +1,19 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-while true; do eval "$(cat DIR/server/mypipe)"; done
+while true
+do
+  while read command
+  do
+    case $command in 
+      "updateScript server") eval "$command"
+        ;;
+      "updateScript client") eval "$command"
+        ;;
+      "updateScript server client") eval "$command"
+        ;;
+      "updateScript client server") eval "$command"
+        ;;
+      *) echo "Invalid Command Recieved"
+    esac
+  done < DIR/server/mypipe
+done
