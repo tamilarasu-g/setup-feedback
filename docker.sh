@@ -26,6 +26,15 @@ CURRENT_USER=$(logname)
 
 echo "The Current Username is : $CURRENT_USER...."
 
+# Check if curl is installed
+
+if ! command -v "curl" &> /dev/null 
+then
+	echo "Curl command not found...Installing curl....."
+	apt install curl -y
+	exit_status "Could not install curl" "Curl installed successfully"
+fi
+
 # Download Docker Script
 
 echo "-----------------------------------------------------------------------------"
@@ -61,4 +70,4 @@ echo "--------------------------------------------------------------------------
 
 usermod -aG docker $CURRENT_USER
 
-exit_status "Could not add the $CURRENT_USER user to the Docker group" "Added the $CURRENT_USER to the Docker Group...Please Logout"
+exit_status "Could not add the user $CURRENT_USER to the Docker group" "Added the user $CURRENT_USER to the Docker Group...Please Logout"
