@@ -71,3 +71,5 @@ echo "--------------------------------------------------------------------------
 usermod -aG docker $CURRENT_USER
 
 exit_status "Could not add the user $CURRENT_USER to the Docker group" "Added the user $CURRENT_USER to the Docker Group...Please Logout"
+
+echo "------------------------------------------------------------------------------"
