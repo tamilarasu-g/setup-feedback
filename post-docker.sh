@@ -87,7 +87,7 @@ exit_status "Could not pull the mongodb image !!" "MongoDB image pulled successf
 
 chmod +x updateScript
 
-echo "$SUDO_PASSWORD" | sudo -S cp updateScript /usr/bin/
+sudo cp updateScript /usr/bin/
 
 exit_status "Could not copy updateScript to /usr/bin/" "Copied updateScript successfully"
 
@@ -99,7 +99,7 @@ exit_status "Could not replace the $CURRENT_WORKING_DIRECTORY in execpipe"
 
 chmod +x execpipe
 
-echo "SUDO_PASSWORD" | sudo -S cp execpipe /usr/bin/
+sudo cp execpipe /usr/bin/
 
 exit_status "Could not copy the execpipe to /usr/bin/" "Copied execpipe successfully"
 
@@ -261,9 +261,11 @@ exit_status "Could not create the service for client" "Service created successfu
 display "Setting up NGINX"
 
 sudo apt-get update
-sudo apt-get install certbot python3-certbot-nginx -y
 
+exit_status "Could not update repositories." "Updated repositories successfully"
 
+sudo apt-get install nginx-full certbot python3-certbot-nginx -y
 
+exit_status "Could not install the required packages" "Installed the required packages successfully"
 
 exit 0
