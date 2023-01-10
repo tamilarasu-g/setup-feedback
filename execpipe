@@ -13,7 +13,7 @@ do
         ;;
       "updateScript client server") eval "$command"
         ;;
-      *) echo "Invalid Command Recieved"
+      *) echo "Invalid Command Recieved: $command at `date`"
     esac
   done < DIR/server/mypipe
 done
