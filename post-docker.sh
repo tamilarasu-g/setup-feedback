@@ -97,6 +97,10 @@ sed -i -e "s|DIR|$CURRENT_WORKING_DIRECTORY|g" ./execpipe
 
 exit_status "Could not replace the $CURRENT_WORKING_DIRECTORY in execpipe"
 
+touch execpipe.log
+
+exit_status "Could not create the log file for execpipe" "Log file for execpipe was created successfully"
+
 chmod +x execpipe
 
 sudo cp execpipe /usr/bin/
