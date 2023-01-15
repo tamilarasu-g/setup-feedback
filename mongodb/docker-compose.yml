@@ -19,6 +19,7 @@ services:
         limits:
           cpus: "0.10"
           memory: 300M
+    restart: always  
   mongo2:
     image : mongo:6.0.2
     environment:
@@ -36,6 +37,7 @@ services:
         limits:
           cpus: "0.10"
           memory: 150M
+    restart: always
   mongo3:
     image : mongo:6.0.2
     environment:
@@ -53,6 +55,7 @@ services:
         limits:
           cpus: "0.10"
           memory: 150M
+    restart: always
 networks:
   default:
     name: swarm-server
