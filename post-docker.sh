@@ -239,11 +239,13 @@ touch ./server/log.txt
 
 exit_status "Could not create the log file for server" "Log file for server created successfully"
 
+chmod o+w ./server/log.txt
+
 mkfifo ./server/mypipe
 
 exit_status "Could not create the pipe" "Pipe created successfully"
 
-chmod +w ./server/mypipe
+chmod o+w ./server/mypipe
 
 exit_status "Could not modify the permissions for mypipe" "Modified the permissions for mypipe successfully"
 
