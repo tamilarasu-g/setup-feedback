@@ -7,13 +7,13 @@ do
   while read command
   do
     case $command in 
-      "updateScript server") echo "Command recieved to update server at `date` >> $LOG_FILE" && eval "$command"
+      "updateScript server") echo "Command recieved to update server at `date`" >> $LOG_FILE && eval "$command"
         ;;
-      "updateScript client") echo "Command recieved to update client at `date` >> $LOG_FILE" && eval "$command"
+      "updateScript client") echo "Command recieved to update client at `date`" >> $LOG_FILE && eval "$command"
         ;;
-      "updateScript server client") echo "Command recieved to update server and client at `date` >> $LOG_FILE" && eval "$command"
+      "updateScript server client") echo "Command recieved to update server and client at `date`" >> $LOG_FILE && eval "$command"
         ;;
-      "updateScript client server") echo "Command recieved to update client and server at `date` >> $LOG_FILE" && eval "$command"
+      "updateScript client server") echo "Command recieved to update client and server at `date`" >> $LOG_FILE && eval "$command"
         ;;
       *) echo "Invalid Command Recieved: $command at `date`" >> $LOG_FILE 
     esac
