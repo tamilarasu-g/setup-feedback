@@ -243,6 +243,10 @@ mkfifo ./server/mypipe
 
 exit_status "Could not create the pipe" "Pipe created successfully"
 
+chmod +w ./server/mypipe
+
+exit_status "Could not modify the permissions for mypipe" "Modified the permissions for mypipe successfully"
+
 docker stack deploy -c ./server/docker-compose.yml backend
 
 exit_status "Could not create a service for server" "Service created successfully for server."
